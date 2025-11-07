@@ -170,6 +170,41 @@ window.addEventListener('click', (e) => {
   if (e.target === modal) {
     closeModal();
   }
+}); 
+
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.querySelector(".menu-toggle");
+  const menu = document.getElementById("menu");
+
+  if (!toggle || !menu) return;
+
+  // ===== Відкрити / закрити меню =====
+  toggle.addEventListener("click", () => {
+    toggle.classList.toggle("active");
+    menu.classList.toggle("open");
+  });
+
+  // ===== Закривати меню при кліку на пункт =====
+  document.querySelectorAll(".menu a").forEach(link => {
+    link.addEventListener("click", () => {
+      toggle.classList.remove("active");
+      menu.classList.remove("open");
+    });
+  });
+
+  // ===== Якщо користувач прокрутив сторінку — закрити меню =====
+  window.addEventListener("scroll", () => {
+    if (menu.classList.contains("open")) {
+      toggle.classList.remove("active");
+      menu.classList.remove("open");
+    }
+  });
+
+  // ===== Якщо клацнули поза меню — теж закрити =====
+  document.addEventListener("click", (e) => {
+    if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+      toggle.classList.remove("active");
+      menu.classList.remove("open");
+    }
+  });
 });
-
-
