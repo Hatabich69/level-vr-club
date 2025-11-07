@@ -22,7 +22,6 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'FrondEnd')));
 
 
-// ===== Telegram helper =====
 async function sendTelegram(message) {
   try {
     const token = process.env.TELEGRAM_BOT_TOKEN;
