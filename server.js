@@ -21,24 +21,6 @@ app.use(cors());
 // Якщо у "public" — заміни на 'public'.
 app.use(express.static(path.join(__dirname, 'FrondEnd')));
 
-// ===== Email (Nodemailer) =====
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT),
-  secure: process.env.EMAIL_SECURE === 'true',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
-transporter.verify(err => {
-  if (err) {
-    console.error('❌ SMTP error:', err);
-  } else {
-    console.log('✅ SMTP ready');
-  }
-});
 
 // ===== Telegram helper =====
 async function sendTelegram(message) {
