@@ -716,9 +716,17 @@ footer p {
 }
 
 .menu {
-  display: flex;
-  gap: 25px;
+  position: fixed;
+  top: 0;
+  right: -100%;
+  transition: right 0.4s ease;
+  /* інші властивості */
 }
+
+.menu.open {
+  right: 0;
+}
+
 
 .menu a {
   color: #fff;

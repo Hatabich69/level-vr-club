@@ -93,14 +93,12 @@ async function submitOrder() {
 }
 
 // === Меню на мобільному ===
-function toggleMenu() {
-    const menu = document.getElementById("menu");
-    if (menu.style.display === "flex") {
-        menu.style.display = "none";
-    } else {
-        menu.style.display = "flex";
-    }
+function toggleMenu(toggle) {
+  const menu = document.getElementById("menu");
+  toggle.classList.toggle("active");
+  menu.classList.toggle("open");
 }
+
 
 window.addEventListener("resize", () => {
     const menu = document.getElementById("menu");
