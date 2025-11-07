@@ -15,13 +15,23 @@ const io = new Server(server, {
 // ===== Middleware =====
 app.use(express.json());
 app.use(cors());
-
-// ⚠️ ВАЖЛИВО: тут має бути папка з index.html, styles.css, script.js
-// Якщо твій фронт лежить у "FrondEnd", залиш як є.
-// Якщо у "public" — заміни на 'public'.
 app.use(express.static(path.join(__dirname, 'FrondEnd')));
 
+// ===== Налаштування SMTP через Gmail =====
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
+transporter.verify(err => {
+  if (err) console.error('❌ SMTP error:', err);
+  else console.log('✅ SMTP ready');
+});
+
+// ===== Telegram повідомлення =====
 async function sendTelegram(message) {
   try {
     const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -45,7 +55,7 @@ async function sendTelegram(message) {
   }
 }
 
-// ===== WebSocket (Socket.io) =====
+// ===== WebSocket =====
 io.on('connection', socket => {
   console.log('📡 Admin connected');
   socket.on('disconnect', () => console.log('🔌 Admin disconnected'));
@@ -85,7 +95,7 @@ ${cartLines}
 IP: ${req.headers['x-forwarded-for'] || req.socket.remoteAddress}
 `.trim();
 
-    // Надсилаємо лист
+    // ===== Надсилання листа =====
     await transporter.sendMail({
       from: `"Level VR Club" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_TO,
@@ -93,18 +103,9 @@ IP: ${req.headers['x-forwarded-for'] || req.socket.remoteAddress}
       text: mailText
     });
 
-    // Шлемо в адмін-панель
-    io.emit('newBooking', {
-      cart,
-      totalPrice,
-      date,
-      time,
-      name,
-      phone,
-      comment
-    });
+    // ===== WebSocket & Telegram =====
+    io.emit('newBooking', { cart, totalPrice, date, time, name, phone, comment });
 
-    // Telegram повідомлення
     const tgMsg = `
 📢 <b>Нове бронювання Level VR Club</b>
 
